@@ -25,377 +25,173 @@ Nota: Los diagramas están en formato PlantUML dentro de bloques de código ```p
 - Miembros relevantes:
   - field: `PlayerMovementState CurrentPlayerMovementState { get; private set; }`
   - `SetPlayerMovementState(PlayerMovementState)`
-  - `InGroundedState(): bool` — true si el estado actual es tierra (Idle/Walking/Running/Sprinting)
-  - `IsStateGroundedState(PlayerMovementState): bool`
+  # Mi Proyecto - 1st & 3rd Person Controller (Parte 1 + Documentación)
 
-PlantUML:
+  Hola — soy el desarrollador detrás de este proyecto. Este repositorio contiene la primera parte de un controlador que permite jugar en primera y tercera persona (1st & 3rd Person Controller). Aquí además encontrarás documentación técnica de los scripts incluidos en la demo.
 
-```plantuml
-@startuml
-class PlayerState {
-  +PlayerMovementState CurrentPlayerMovementState
-  +SetPlayerMovementState(playerMovementState)
-  +InGroundedState(): bool
-  +IsStateGroundedState(movementState): bool
-}
-enum PlayerMovementState {
-  Idling
-  Walking
-  Running
-  Sprinting
-  Jumping
-  Falling
-  Strafing
-}
-@enduml
-```
+  ---
 
-### PlayerController (Assets/Miprimerpersonaje/FinalCharacterController/Scripts/PlayerController.cs)
+  ## Descripción breve
 
-- Propósito: Lógica principal de movimiento, físicas verticales, lateral movement, rotación y control de cámara.
-- Clases: `PlayerController` (MonoBehaviour)
-- Dependencias: `PlayerLocomotionInput`, `PlayerState`, `CharacterController`, `Camera`, `CharacterControllerUtils`
-- Campos más importantes (resumen):
-  - Componentes: `_characterController`, `_playerCamera`
-  - Movimiento: `walkSpeed`, `runSpeed`, `sprintSpeed`, `walkAcceleration`, `runAcceleration`, `sprintAcceleration`...
-  - Física: `gravity`, `terminalVelocity`, `jumpSpeed`
-  - Cámara/Rotación: `lookSenseH`, `lookSenseV`, `playerModelRotationSpeed`, `rotateToTargetTime`
-- Métodos principales:
-  - `Awake()` — obtención de componentes
-  - `Update()` — llama a `UpdateMovementState()`, `HandleVerticalMovement()`, `HandleLateralMovement()`
-  - `UpdateMovementState()` — establece `PlayerState` según input y grounded
-  - `HandleVerticalMovement()` — aplica gravedad y salto
-  - `HandleLateralMovement()` — aplica aceleración, arrastre, y mueve con `CharacterController.Move`
-  - `HandleSteepWalls(Vector3)` — corrige la velocidad al chocar con pendientes
-  - `LateUpdate()`/`UpdateCameraRotation()` — control de cámara y rotación del personaje
-  - Checks: `IsMovingLaterally()`, `IsGrounded()`, `IsGroundedWhileGrounded()`, `IsGroundedWhileAirborne()`, `CanRun()`
+  - Proyecto: 1st and 3rd Person Controller (Parte 1).
+  - Contenido: scripts, escenas y assets necesarios para el controlador de personaje (movimiento, animaciones y prefabs).
 
-PlantUML (resumen de relaciones):
+  Este README combina la explicación de alto nivel (qué es el proyecto y cómo usarlo) con una guía técnica de los scripts principales y diagramas en formato PlantUML para facilitar la lectura y generación de diagramas.
 
-```plantuml
-@startuml
-class PlayerController {
-  -CharacterController _characterController
-  -Camera _playerCamera
-  -PlayerLocomotionInput _playerLocomotionInput
-  -PlayerState _playerState
-  +Update()
-  -UpdateMovementState()
-  -HandleVerticalMovement()
-  -HandleLateralMovement()
-  -UpdateCameraRotation()
-}
+  ## Qué incluye (resumen)
 
-PlayerController --> PlayerLocomotionInput : uses
-PlayerController --> PlayerState : uses
-PlayerController --> CharacterControllerUtils : uses
-PlayerController --> Camera : controls
-@enduml
-```
+  - Carpeta `Assets/PlayerController` con scripts, animaciones y prefabs del personaje.
+  - `ProjectSettings/` con la configuración del proyecto Unity usada para esta demo.
+  - `.gitattributes` y `.gitignore` configurados para Unity y Git LFS (se han trackeado ficheros binarios comunes como `.fbx`, `.png`, `.wav`, etc.).
+  - Documentación técnica (secciones siguientes) con resúmenes de clases y diagramas PlantUML.
 
-### PlayerAnimation (Assets/Miprimerpersonaje/FinalCharacterController/Scripts/PlayerAnimation.cs)
+  ## Inspiración y créditos
 
- - Propósito: Actualizar parámetros del `Animator` basándose en input y `PlayerState`.
- - Clases: `PlayerAnimation`
- - Dependencias: `Animator`, `PlayerLocomotionInput`, `PlayerState`, `PlayerController`, `PlayerActionsInput`
- - Miembros: hashes de animator (`inputX`, `inputY`, `isGrounded`, `isJumping`, `isFalling`, `isRotatingToTarget`, `rotationMismatch`, `isAttacking`, `isGathering`, `isPlayingAction`), blend smoothing, `actionHashes` array.
- - Métodos principales: `Awake()` para referencias, `Update()` -> `UpdateAnimationState()` que setea booleans y floats del animator.
+  - Inspirado por tutoriales y recursos públicos que enseñan controladores de personaje en Unity.
+  - Referencia principal:
 
-PlantUML:
+      [Tutorial (YouTube)](https://www.youtube.com/watch?v=SwWZ-pklT9I&list=PLYvjPIZvaz-o-DIBhiHzSrrau9HKSmeEz&index=1)
 
-```plantuml
-@startuml
-class PlayerAnimation {
-  -Animator _animator
-  -PlayerLocomotionInput _playerLocomotionInput
-  -PlayerState _playerState
-  -PlayerController _playerController
-  -PlayerActionsInput _playerActionsInput
-  -UpdateAnimationState()
-}
+  ---
 
-PlayerAnimation --> Animator : sets parameters
-PlayerAnimation --> PlayerLocomotionInput : reads MovementInput
-PlayerAnimation --> PlayerState : reads movement state
-PlayerAnimation --> PlayerActionsInput : reads Attack/Gather
-@enduml
-```
+  ## Cómo abrir y ejecutar la demo (instalación rápida)
 
-### CharacterControllerUtils (Assets/Miprimerpersonaje/FinalCharacterController/Scripts/CharacterControllerUtils.cs)
+  1. Abre Unity Hub y añade la carpeta del proyecto: `Demo 1.3.1`.
+  2. Abre el proyecto con la versión de Unity indicada en `ProjectSettings/ProjectVersion.txt` (recomendado usar la misma versión para evitar problemas de migración).
+  3. Si usas Git: este repo está preparado para Git LFS; instala y autentica Git LFS en tu equipo si aún no lo tienes:
 
- - Propósito: Funciones utilitarias para `CharacterController`. Actualmente dispone de:
-   - `GetNormalWithSphereCast(CharacterController, LayerMask)` — devuelve normal del suelo usando SphereCast
+     - Windows (PowerShell):
 
-PlantUML:
+       ```powershell
+       git lfs install --local
+       ```
 
-```plantuml
-@startuml
-class CharacterControllerUtils {
-  +GetNormalWithSphereCast(characterController, layerMask): Vector3
-}
-@enduml
-```
+  4. Abre la escena principal en `Assets/Scenes/Example_Scene.unity` y presiona Play.
 
-### Input & manager scripts
+  Notas:
+  - `Library/` es una carpeta generada por Unity y está ignorada por `.gitignore`.
+  - Si hay assets grandes que no subieron correctamente, asegúrate de tener Git LFS instalado y que tu cuenta de GitHub tenga cuota suficiente.
 
- - `Assets/Miprimerpersonaje/FinalCharacterController/Scripts/Input/ThirdPersonInput.cs`
-   - Implementa `PlayerControls.IThirdPersonMapActions`
-   - Controla zoom de cámara (`ScrollInput`) y engancha los callbacks del `PlayerInputManager.Instance`.
+  ---
 
-PlantUML:
+  ## Estructura de carpetas (resumen)
 
-```plantuml
-@startuml
-class ThirdPersonInput {
-  -CinemachineThirdPersonFollow _thirdPersonFollow
-  +Vector2 ScrollInput
-  +OnScrollCamera(context)
-}
+  # Demo 1.3 — Documentación de scripts
 
-ThirdPersonInput ..> PlayerInputManager : uses
-ThirdPersonInput ..> CinemachineThirdPersonFollow : controls
-@enduml
-```
+  Este README describe los scripts incluidos en `Assets/Miprimerpersonaje/FinalCharacterController` y proporciona la documentación técnica del controlador de personaje.
 
- - `Assets/Miprimerpersonaje/FinalCharacterController/Scripts/Input/PlayerLocomotionInput.cs`
-   - Implementa `PlayerControls.IPlayerLocomotionMapActions`
-   - Proporciona propiedades: `MovementInput`, `LookInput`, `JumpPressed`, `SprintToggledOn`, `WalkToggledOn`
-   - Maneja callbacks OnMovement, OnLook, OnToggleSprint, OnJump, OnToggleWalk
+  Incluye:
 
-PlantUML:
+  - Resumen de los scripts principales
+  - PlantUML fuente en `Docs/diagrams/*.puml`
+  - Diagrama UML (PNG) generado automáticamente en `Docs/diagrams/*.png`
 
-```plantuml
-@startuml
-class PlayerLocomotionInput {
-  +Vector2 MovementInput
-  +Vector2 LookInput
-  +bool JumpPressed
-  +bool SprintToggledOn
-  +bool WalkToggledOn
-  +OnMovement(context)
-  +OnLook(context)
-  +OnToggleSprint(context)
-  +OnJump(context)
-  +OnToggleWalk(context)
-}
+  Nota: las imágenes (PNG) se generan automáticamente mediante un GitHub Action cuando se actualizan los archivos `.puml`. Si no ves las imágenes de inmediato, espera unos minutos o vuelve a cargar la página del repositorio en GitHub.
 
-PlayerLocomotionInput ..> PlayerInputManager : uses
-@enduml
-```
+  ## Contrato breve (inputs/outputs/errores)
 
- - `Assets/Miprimerpersonaje/FinalCharacterController/Scripts/Input/PlayerInputManager.cs`
-   - Singleton (`Instance`) que inicializa `PlayerControls` y habilita los mapas.
-   - Expone `PlayersControls` (instancia generada de `PlayerControls`)
+  - Input: Componentes Unity (CharacterController, Animator, Camera, Input System)
+  - Output: Estados y comportamientos del personaje (movimiento, animación, input)
+  - Modo de error: si `PlayerInputManager.Instance` no está inicializado los componentes de input muestran errores en consola y no se habilitan los mapas.
 
-PlantUML:
+  ## Cómo abrir y ejecutar la demo (instalación rápida)
 
-```plantuml
-@startuml
-class PlayerInputManager {
-  +static Instance : PlayerInputManager
-  +PlayerControls PlayersControls
-  +Awake()
-  +OnEnable()
-  +OnDisable()
-}
-@enduml
-```
+  1. Abre Unity Hub y añade la carpeta del proyecto: `Demo 1.3.1`.
+  2. Abre el proyecto con la versión de Unity indicada en `ProjectSettings/ProjectVersion.txt`.
+  3. Instala Git LFS si vas a clonar/editar el repositorio (recomendado):
 
- - `Assets/Miprimerpersonaje/FinalCharacterController/Scripts/Input/PlayerActionsInput.cs`
-   - Implementa `PlayerControls.IPlayerActionMapActions`
-   - Propiedades: `AttackPressed`, `GatherPressed`
-   - Reset de inputs de acción si el jugador se mueve o está en aire
+     ```powershell
+     git lfs install --local
+     ```
 
-PlantUML:
+  4. Abre la escena principal `Assets/Scenes/Example_Scene.unity` y presiona Play.
 
-```plantuml
-@startuml
-class PlayerActionsInput {
-  +bool AttackPressed
-  +bool GatherPressed
-  +OnAttack(context)
-  +OnGather(context)
-}
+  ---
 
-PlayerActionsInput ..> PlayerInputManager : uses
-PlayerActionsInput ..> PlayerLocomotionInput : reads
-PlayerActionsInput ..> PlayerState : reads
-@enduml
-```
+  ## Estructura de carpetas (resumen)
 
-### PlayerControls (Assets/Miprimerpersonaje/FinalCharacterController/Input/PlayerControls.cs) (autogenerado)
+  - Assets/
+    - PlayerController/
+      - Animations/
+      - Input/
+      - Model/
+      - Prefabs/
+      - Presets/
+      - Scripts/
+  - Docs/diagrams/  (PlantUML .puml + imágenes generadas)
+  - ProjectSettings/
 
-  - Propósito: Código generado por el Unity Input System que contiene `InputActionMaps` y wrappers (PlayerLocomotionMap, ThirdPersonMap, PlayerActionMap).
-  - Contenido: varias estructuras internas (PlayerLocomotionMapActions, ThirdPersonMapActions, PlayerActionMapActions) con métodos `Enable()`, `Disable()`, `AddCallbacks()` y `SetCallbacks()` y la implementación de interfaces `IPlayerLocomotionMapActions`, `IThirdPersonMapActions`, `IPlayerActionMapActions`.
+  ---
 
-PlantUML (simplificado):
+  ## Scripts principales (resumen técnico)
 
-```plantuml
-@startuml
-class PlayerControls {
-  -InputActionAsset asset
-  +PlayerLocomotionMap : PlayerLocomotionMapActions
-  +ThirdPersonMap : ThirdPersonMapActions
-  +PlayerActionMap : PlayerActionMapActions
-}
-PlayerControls ..> PlayerLocomotionInput : used-by
-PlayerControls ..> ThirdPersonInput : used-by
-PlayerControls ..> PlayerActionsInput : used-by
-@enduml
-```
+  - PlayerState: mantiene el estado de movimiento del jugador (Idling, Walking, Running, Sprinting, Jumping, Falling, Strafing).
+  - PlayerController: lógica de locomoción, salto, gravedad, rotación y control de cámara.
+  - PlayerAnimation: actualización de parámetros del `Animator` en base al estado y el input.
+  - CharacterControllerUtils: utilidades para detección de suelo y normales.
+  - Input: `PlayerLocomotionInput`, `PlayerActionsInput`, `ThirdPersonInput`, `PlayerInputManager` (wrappers del Input System).
 
-## Relaciones generales
+  Para ver la descripción detallada por cada clase y los diagramas, consulta la sección de Diagramas abajo.
 
-- `PlayerInputManager` crea y expone `PlayerControls`.
-- Los componentes `PlayerLocomotionInput`, `ThirdPersonInput`, `PlayerActionsInput` se registran como callbacks contra `PlayerControls` a través de `PlayerInputManager.Instance`.
-- `PlayerController`, `PlayerAnimation` y `PlayerActionsInput` leen el estado en `PlayerState` y usan `PlayerLocomotionInput` para obtener input del jugador.
+  ---
 
+  ## Diagramas (imágenes generadas)
 
-## Diagrama UML global (todas las clases y relaciones)
+  > Si las imágenes no aparecen aún, espera un par de minutos: el workflow de GitHub genera las PNG automáticamente cuando hay cambios en los `.puml`.
 
-El siguiente diagrama muestra todas las clases analizadas, sus variables y métodos principales, y las relaciones entre ellas. Puedes copiar este bloque a un archivo `Docs/diagrams/global_class_diagram.puml` y renderizarlo con PlantUML.
+  ### PlayerState
 
-```plantuml
-@startuml GlobalClasses
-skinparam classAttributeIconSize 0
+  ![PlayerState diagram](Docs/diagrams/playerstate.png)
 
-' PlayerState
-class PlayerState {
-  +PlayerMovementState CurrentPlayerMovementState
-  +SetPlayerMovementState(playerMovementState)
-  +InGroundedState(): bool
-  +IsStateGroundedState(movementState): bool
-}
+  ### PlayerController
 
-' PlayerController
-class PlayerController {
-  -CharacterController _characterController
-  -Camera _playerCamera
-  -PlayerLocomotionInput _playerLocomotionInput
-  -PlayerState _playerState
-  +RotationMismatch: float
-  +IsRotatingToTarget: bool
-  +Update()
-  -UpdateMovementState()
-  -HandleVerticalMovement()
-  -HandleLateralMovement()
-  -UpdateCameraRotation()
-}
+  ![PlayerController diagram](Docs/diagrams/playercontroller.png)
 
-' PlayerAnimation
-class PlayerAnimation {
-  -Animator _animator
-  -PlayerLocomotionInput _playerLocomotionInput
-  -PlayerState _playerState
-  -PlayerController _playerController
-  -PlayerActionsInput _playerActionsInput
-  +Update()
-  -UpdateAnimationState()
-}
+  ### PlayerAnimation
 
-' CharacterControllerUtils
-class CharacterControllerUtils {
-  +GetNormalWithSphereCast(characterController, layerMask): Vector3
-}
+  ![PlayerAnimation diagram](Docs/diagrams/playeranimation.png)
 
-' ThirdPersonInput
-class ThirdPersonInput {
-  +Vector2 ScrollInput
-  +OnScrollCamera(context)
-}
+  ### CharacterControllerUtils
 
-' PlayerLocomotionInput
-class PlayerLocomotionInput {
-  +Vector2 MovementInput
-  +Vector2 LookInput
-  +bool JumpPressed
-  +bool SprintToggledOn
-  +bool WalkToggledOn
-}
+  ![CharacterControllerUtils diagram](Docs/diagrams/charactercontrollerutils.png)
 
-' PlayerInputManager
-class PlayerInputManager {
-  +static Instance : PlayerInputManager
-  +PlayerControls PlayersControls
-}
+  ### Input / Manager
 
-' PlayerActionsInput
-class PlayerActionsInput {
-  +bool AttackPressed
-  +bool GatherPressed
-  +OnAttack(context)
-  +OnGather(context)
-}
+  ![Input diagram](Docs/diagrams/input.png)
 
-' PlayerControls (autogenerated)
-class PlayerControls {
-  -InputActionAsset asset
-}
+  ### Diagrama global
 
-' Enumerations
-enum PlayerMovementState {
-  Idling
-  Walking
-  Running
-  Sprinting
-  Jumping
-  Falling
-  Strafing
-}
+  ![Global class diagram](Docs/diagrams/global_class_diagram.png)
 
-' Relaciones
-PlayerController --> PlayerLocomotionInput : reads
-PlayerController --> PlayerState : updates/reads
-PlayerController --> CharacterControllerUtils : uses
-PlayerController --> Camera : uses
-PlayerAnimation --> PlayerLocomotionInput : reads
-PlayerAnimation --> PlayerState : reads
-PlayerAnimation --> PlayerController : reads rotation
-PlayerAnimation --> PlayerActionsInput : reads
-ThirdPersonInput --> PlayerInputManager : uses
-PlayerLocomotionInput --> PlayerInputManager : uses
-PlayerActionsInput --> PlayerInputManager : uses
-PlayerInputManager --> PlayerControls : creates
-PlayerControls ..> PlayerLocomotionInput : provides maps
-PlayerControls ..> ThirdPersonInput : provides maps
-PlayerControls ..> PlayerActionsInput : provides maps
+  ### Mapa mental
 
-@enduml
-```
+  ![Mindmap](Docs/diagrams/mindmap.png)
 
-## Mapa mental / mapa de archivos
+  ---
 
-Abajo hay un mapa mental simplificado (PlantUML mindmap) que representa la estructura de archivos y cómo los scripts están organizados dentro de `Assets/Miprimerpersonaje/FinalCharacterController`.
+  ## PlantUML fuente
 
-```plantuml
-@startmindmap
-* FinalCharacterController
-** Scripts
-*** PlayerState.cs
-*** PlayerController.cs
-*** PlayerAnimation.cs
-*** CharacterControllerUtils.cs
-*** Input
-**** PlayerLocomotionInput.cs
-**** PlayerActionsInput.cs
-**** PlayerInputManager.cs
-**** ThirdPersonInput.cs
-** Input
-*** PlayerControls.inputactions
-*** PlayerControls.cs (autogenerated)
-** Animation
-*** (archivos de animación y controlador)
-@endmindmap
-```
+  Los archivos `.puml` están en `Docs/diagrams/`. Si quieres regenerar las imágenes localmente puedes usar PlantUML (Java/plantuml.jar) o Docker con la imagen `plantuml/plantuml`.
 
----
+  Ejemplo (Docker):
 
-Con esto el `README.md` incluye:
-- Diagramas PlantUML por clase (anteriores)
-- Un diagrama UML global con todas las clases + relaciones
-- Un mapa mental de la estructura de archivos
+  ```powershell
+  docker run --rm -v "${PWD}:/workspace" plantuml/plantuml -tpng /workspace/Docs/diagrams/*.puml
+  ```
 
-Si quieres, puedo ahora:
-- Guardar cada bloque PlantUML en `Docs/diagrams/` como `.puml` (recomendado). 
-- Generar PNG/SVG desde esos `.puml` (requiere Java + plantuml.jar o la extensión PlantUML). Indícame si quieres que lo ejecute.
+  ---
+
+  ## Roadmap y colaboración
+
+  - Parte 2: interacción y combate.
+  - Abre un issue para proponer cambios grandes o crea una PR desde un fork.
+
+  ---
+
+  ## Contacto
+
+  - Perfil: https://github.com/LechuDev
+
+  Gracias por revisar el proyecto — si quieres que genere las imágenes por mí (usando Docker aquí) o que espere a que el workflow genere las PNG en GitHub, dime y procedo.
+
 

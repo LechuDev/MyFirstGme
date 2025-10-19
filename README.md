@@ -1,4 +1,4 @@
-# 🎮 ¡Bienvenido a tu personaje en Unity! — Demo 1.3
+# 🎮 ¡Bienvenido a tu personaje en Unity! — Demo 1.3 v2
 
 ¡Hola! 👋 Este proyecto te permite controlar un personaje en primera y tercera persona dentro de Unity. Es como tener tu propio héroe que camina, corre, salta y se mueve con estilo. Si estás empezando en Unity o simplemente quieres divertirte, ¡este proyecto es para ti!
 

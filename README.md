@@ -84,9 +84,16 @@ Nota: Los diagramas están en formato PlantUML dentro de bloques de código ```p
 
   - Resumen de los scripts principales
   - PlantUML fuente en `Docs/diagrams/*.puml`
-  - Diagrama UML (PNG) generado automáticamente en `Docs/diagrams/*.png`
+  # Demo 1.3 — Documentación de scripts
 
-  Nota: las imágenes (PNG) se generan automáticamente mediante un GitHub Action cuando se actualizan los archivos `.puml`. Si no ves las imágenes de inmediato, espera unos minutos o vuelve a cargar la página del repositorio en GitHub.
+  Este README describe los scripts incluidos en `Assets/Miprimerpersonaje/FinalCharacterController` y proporciona la documentación técnica del controlador de personaje.
+
+  Incluye:
+
+  - Resumen de los scripts principales
+  - Diagrama UML (PNG) en `Docs/diagrams/*.png`
+
+  Nota: las imágenes (PNG) se generan automáticamente mediante un GitHub Action cuando se actualizan los archivos fuente; las imágenes ya están incluidas en `Docs/diagrams/`.
 
   ## Contrato breve (inputs/outputs/errores)
 
@@ -118,7 +125,7 @@ Nota: Los diagramas están en formato PlantUML dentro de bloques de código ```p
       - Prefabs/
       - Presets/
       - Scripts/
-  - Docs/diagrams/  (PlantUML .puml + imágenes generadas)
+  - Docs/diagrams/  (imágenes PNG incluidas)
   - ProjectSettings/
 
   ---
@@ -131,13 +138,9 @@ Nota: Los diagramas están en formato PlantUML dentro de bloques de código ```p
   - CharacterControllerUtils: utilidades para detección de suelo y normales.
   - Input: `PlayerLocomotionInput`, `PlayerActionsInput`, `ThirdPersonInput`, `PlayerInputManager` (wrappers del Input System).
 
-  Para ver la descripción detallada por cada clase y los diagramas, consulta la sección de Diagramas abajo.
-
   ---
 
-  ## Diagramas (imágenes generadas)
-
-  > Si las imágenes no aparecen aún, espera un par de minutos: el workflow de GitHub genera las PNG automáticamente cuando hay cambios en los `.puml`.
+  ## Diagramas (imágenes incluidas)
 
   ### PlayerState
 
@@ -161,7 +164,7 @@ Nota: Los diagramas están en formato PlantUML dentro de bloques de código ```p
 
   ### Diagrama global
 
-  ![Global class diagram](Docs/diagrams/global_class_diagram.png)
+  ![Global class diagram](Docs/diagrams/GlobalClasses.png)
 
   ### Mapa mental
 
@@ -169,29 +172,19 @@ Nota: Los diagramas están en formato PlantUML dentro de bloques de código ```p
 
   ---
 
-  ## PlantUML fuente
+  ## Notas finales
 
-  Los archivos `.puml` están en `Docs/diagrams/`. Si quieres regenerar las imágenes localmente puedes usar PlantUML (Java/plantuml.jar) o Docker con la imagen `plantuml/plantuml`.
-
-  Ejemplo (Docker):
-
-  ```powershell
-  docker run --rm -v "${PWD}:/workspace" plantuml/plantuml -tpng /workspace/Docs/diagrams/*.puml
-  ```
-
-  ---
-
-  ## Roadmap y colaboración
-
-  - Parte 2: interacción y combate.
-  - Abre un issue para proponer cambios grandes o crea una PR desde un fork.
+  Si quieres que convierta estas imágenes a SVG para mayor nitidez web, o que restaure las fuentes `.puml` en otra rama, dímelo y lo hago.
 
   ---
 
   ## Contacto
 
+  - Perfil: [LechuDev](https://github.com/LechuDev)
+
+  Gracias por revisar el proyecto.
+  ## Contacto
+
+
+
   - Perfil: https://github.com/LechuDev
-
-  Gracias por revisar el proyecto — si quieres que genere las imágenes por mí (usando Docker aquí) o que espere a que el workflow genere las PNG en GitHub, dime y procedo.
-
-

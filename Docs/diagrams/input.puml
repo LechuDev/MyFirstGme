@@ -1,0 +1,31 @@
+@startuml
+class ThirdPersonInput {
+  -CinemachineThirdPersonFollow _thirdPersonFollow
+  +Vector2 ScrollInput
+  +OnScrollCamera(context)
+}
+
+class PlayerLocomotionInput {
+  +Vector2 MovementInput
+  +Vector2 LookInput
+  +bool JumpPressed
+  +bool SprintToggledOn
+  +bool WalkToggledOn
+}
+
+class PlayerActionsInput {
+  +bool AttackPressed
+  +bool GatherPressed
+  +OnAttack(context)
+  +OnGather(context)
+}
+
+class PlayerInputManager {
+  +static Instance : PlayerInputManager
+  +PlayerControls PlayersControls
+}
+
+PlayerInputManager --> PlayerLocomotionInput
+PlayerInputManager --> ThirdPersonInput
+PlayerInputManager --> PlayerActionsInput
+@enduml

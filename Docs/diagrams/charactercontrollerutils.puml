@@ -1,0 +1,5 @@
+@startuml
+class CharacterControllerUtils {
+  +GetNormalWithSphereCast(characterController, layerMask): Vector3
+}
+@enduml

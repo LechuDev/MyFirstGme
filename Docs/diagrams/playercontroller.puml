@@ -1,0 +1,18 @@
+@startuml
+class PlayerController {
+  -CharacterController _characterController
+  -Camera _playerCamera
+  -PlayerLocomotionInput _playerLocomotionInput
+  -PlayerState _playerState
+  +Update()
+  -UpdateMovementState()
+  -HandleVerticalMovement()
+  -HandleLateralMovement()
+  -UpdateCameraRotation()
+}
+
+PlayerController --> PlayerLocomotionInput : uses
+PlayerController --> PlayerState : uses
+PlayerController --> CharacterControllerUtils : uses
+PlayerController --> Camera : controls
+@enduml

@@ -1,190 +1,120 @@
-# Demo 1.3 — Documentación de scripts
+# 🎮 ¡Bienvenido a tu personaje en Unity! — Demo 1.3 v2
 
-Este README describe los scripts incluidos en `Assets/Miprimerpersonaje/FinalCharacterController`.
+¡Hola! 👋 Este proyecto te permite controlar un personaje en primera y tercera persona dentro de Unity. Es como tener tu propio héroe que camina, corre, salta y se mueve con estilo. Si estás empezando en Unity o simplemente quieres divertirte, ¡este proyecto es para ti!
 
-Incluye:
+---
 
-- Resumen de cada archivo .cs
-- Lista de clases, variables y métodos principales
-- Diagramas UML (PlantUML) por clase para visualizar relaciones y llamadas
+## 🧩 ¿Qué hay en este proyecto?
 
-Nota: Los diagramas están en formato PlantUML dentro de bloques de código ```plantuml``` para que puedas copiarlos a un archivo .puml y renderizarlos con PlantUML.
+- Un personaje que puedes mover con el teclado o control.
+- Animaciones que hacen que se vea más real.
+- Una escena lista para jugar.
+- Archivos organizados para que no te pierdas.
+- Diagramas para entender cómo funciona todo (¡si te gusta aprender más!).
 
-## Contrato breve (inputs/outputs/errores)
+---
 
-- Input: Componentes Unity (CharacterController, Animator, Camera, Input System)
-- Output: Estados y comportamientos del personaje (movimiento, animación, input)
-- Modo de error: si `PlayerInputManager.Instance` no está inicializado los componentes de input muestran errores en consola y no se habilitan los mapas.
+## 🚀 ¿Cómo lo uso?
 
-## Scripts principales
+1. Abre Unity Hub.
+2. Agrega la carpeta del proyecto: `Demo 1.3.1`.
+3. Usa la misma versión de Unity que aparece en `ProjectSettings/ProjectVersion.txt` (¡así todo funciona sin errores!).
+4. Abre la escena principal: `Assets/Scenes/Example_Scene.unity`.
+5. Presiona el botón de Play ▶️ ¡y empieza a jugar!
 
-### PlayerState (Assets/Miprimerpersonaje/FinalCharacterController/Scripts/PlayerState.cs)
+---
 
-- Propósito: Mantener el estado de movimiento del jugador (Idling, Walking, Running, ...)
-- Clases/Tipos: `PlayerState` (MonoBehaviour), `PlayerMovementState` (enum)
-- Miembros relevantes:
-  - field: `PlayerMovementState CurrentPlayerMovementState { get; private set; }`
-  - `SetPlayerMovementState(PlayerMovementState)`
-  # Mi Proyecto - 1st & 3rd Person Controller (Parte 1 + Documentación)
+## 🛠️ ¿Qué necesito?
 
-  Hola — soy el desarrollador detrás de este proyecto. Este repositorio contiene la primera parte de un controlador que permite jugar en primera y tercera persona (1st & 3rd Person Controller). Aquí además encontrarás documentación técnica de los scripts incluidos en la demo.
+- Unity instalado en tu computadora.
+- Git LFS (solo si vas a editar o subir el proyecto a GitHub).
+  - Para instalarlo en Windows, abre PowerShell y escribe:
 
-  ---
+    ```powershell
+    git lfs install --local
+    ```
 
-  ## Descripción breve
+---
 
-  - Proyecto: 1st and 3rd Person Controller (Parte 1).
-  - Contenido: scripts, escenas y assets necesarios para el controlador de personaje (movimiento, animaciones y prefabs).
+## 📁 ¿Dónde están las cosas?
 
-  Este README combina la explicación de alto nivel (qué es el proyecto y cómo usarlo) con una guía técnica de los scripts principales y diagramas en formato PlantUML para facilitar la lectura y generación de diagramas.
+- `Assets/PlayerController/` → Aquí están los scripts, animaciones y prefabs.
+- `Docs/diagrams/` → Aquí están los diagramas que explican cómo funciona el código.
+- `ProjectSettings/` → Configuración del proyecto.
 
-  ## Qué incluye (resumen)
+---
 
-  - Carpeta `Assets/PlayerController` con scripts, animaciones y prefabs del personaje.
-  - `ProjectSettings/` con la configuración del proyecto Unity usada para esta demo.
-  - `.gitattributes` y `.gitignore` configurados para Unity y Git LFS (se han trackeado ficheros binarios comunes como `.fbx`, `.png`, `.wav`, etc.).
-  - Documentación técnica (secciones siguientes) con resúmenes de clases y diagramas PlantUML.
+## 💡 ¿Quién hizo esto?
 
-  ## Inspiración y créditos
+Este proyecto fue creado por [LechuDev](https://github.com/LechuDev), inspirado en tutoriales públicos como este:
 
-  - Inspirado por tutoriales y recursos públicos que enseñan controladores de personaje en Unity.
-  - Referencia principal:
+🎥 [Tutorial en YouTube](https://www.youtube.com/watch?v=SwWZ-pklT9I&list=PLYvjPIZvaz-o-DIBhiHzSrrau9HKSmeEz&index=1)
 
-      [Tutorial (YouTube)](https://www.youtube.com/watch?v=SwWZ-pklT9I&list=PLYvjPIZvaz-o-DIBhiHzSrrau9HKSmeEz&index=1)
+---
 
-  ---
+## 📚 ¿Quieres aprender más?
 
-  ## Cómo abrir y ejecutar la demo (instalación rápida)
+Si te interesa cómo funciona el código por dentro, sigue leyendo. Aquí viene la parte técnica con diagramas para programadores y curiosos 🧠👇
 
-  1. Abre Unity Hub y añade la carpeta del proyecto: `Demo 1.3.1`.
-  2. Abre el proyecto con la versión de Unity indicada en `ProjectSettings/ProjectVersion.txt` (recomendado usar la misma versión para evitar problemas de migración).
-  3. Si usas Git: este repo está preparado para Git LFS; instala y autentica Git LFS en tu equipo si aún no lo tienes:
+---
 
-     - Windows (PowerShell):
+# 🧠 Documentación técnica — Scripts y diagramas
 
-       ```powershell
-       git lfs install --local
-       ```
+Este proyecto incluye scripts en `Assets/Miprimerpersonaje/FinalCharacterController` que controlan el movimiento, animación e input del personaje.
 
-  4. Abre la escena principal en `Assets/Scenes/Example_Scene.unity` y presiona Play.
+### 🔄 Contrato breve (inputs/outputs/errores)
 
-  Notas:
-  - `Library/` es una carpeta generada por Unity y está ignorada por `.gitignore`.
-  - Si hay assets grandes que no subieron correctamente, asegúrate de tener Git LFS instalado y que tu cuenta de GitHub tenga cuota suficiente.
+- **Input:** Componentes Unity como `CharacterController`, `Animator`, `Camera`, `Input System`.
+- **Output:** Estados del personaje (caminar, correr, saltar, etc.).
+- **Errores:** Si `PlayerInputManager.Instance` no está activo, el input no funciona y verás errores en consola.
 
-  ---
+---
 
-  ## Estructura de carpetas (resumen)
+## 📜 Scripts principales
 
-  # Demo 1.3 — Documentación de scripts
+- **PlayerState:** Guarda el estado del personaje (Idle, Walking, Running...).
+- **PlayerController:** Controla cómo se mueve, salta y rota el personaje.
+- **PlayerAnimation:** Actualiza el `Animator` según el estado y el input.
+- **CharacterControllerUtils:** Ayuda a detectar el suelo y las superficies.
+- **Input:** Incluye `PlayerLocomotionInput`, `PlayerActionsInput`, `ThirdPersonInput`, `PlayerInputManager`.
 
-  Este README describe los scripts incluidos en `Assets/Miprimerpersonaje/FinalCharacterController` y proporciona la documentación técnica del controlador de personaje.
+---
 
-  Incluye:
+## 🖼️ Diagramas UML
 
-  - Resumen de los scripts principales
-  - PlantUML fuente en `Docs/diagrams/*.puml`
-  # Demo 1.3 — Documentación de scripts
+Estos diagramas te ayudan a entender cómo se conectan las clases y métodos. Están en formato PNG y también puedes usar los archivos `.puml` si quieres generar tus propios diagramas con PlantUML.
 
-  Este README describe los scripts incluidos en `Assets/Miprimerpersonaje/FinalCharacterController` y proporciona la documentación técnica del controlador de personaje.
+### PlayerState  
+![PlayerState diagram](Docs/diagrams/playerstate.png)
 
-  Incluye:
+### PlayerController  
+![PlayerController diagram](Docs/diagrams/playercontroller.png)
 
-  - Resumen de los scripts principales
-  - Diagrama UML (PNG) en `Docs/diagrams/*.png`
+### PlayerAnimation  
+![PlayerAnimation diagram](Docs/diagrams/playeranimation.png)
 
-  Nota: las imágenes (PNG) se generan automáticamente mediante un GitHub Action cuando se actualizan los archivos fuente; las imágenes ya están incluidas en `Docs/diagrams/`.
+### CharacterControllerUtils  
+![CharacterControllerUtils diagram](Docs/diagrams/charactercontrollerutils.png)
 
-  ## Contrato breve (inputs/outputs/errores)
+### Input / Manager  
+![Input diagram](Docs/diagrams/input.png)
 
-  - Input: Componentes Unity (CharacterController, Animator, Camera, Input System)
-  - Output: Estados y comportamientos del personaje (movimiento, animación, input)
-  - Modo de error: si `PlayerInputManager.Instance` no está inicializado los componentes de input muestran errores en consola y no se habilitan los mapas.
+### Diagrama global  
+![Global class diagram](Docs/diagrams/GlobalClasses.png)
 
-  ## Cómo abrir y ejecutar la demo (instalación rápida)
+### Mapa mental  
+![Mindmap](Docs/diagrams/mindmap.png)
 
-  1. Abre Unity Hub y añade la carpeta del proyecto: `Demo 1.3.1`.
-  2. Abre el proyecto con la versión de Unity indicada en `ProjectSettings/ProjectVersion.txt`.
-  3. Instala Git LFS si vas a clonar/editar el repositorio (recomendado):
+---
 
-     ```powershell
-     git lfs install --local
-     ```
+## 🧵 ¿Quieres los diagramas en otro formato?
 
-  4. Abre la escena principal `Assets/Scenes/Example_Scene.unity` y presiona Play.
+Si prefieres los diagramas en SVG para que se vean mejor en la web, o quieres los archivos `.puml` para editarlos, ¡dímelo y los preparo!
 
-  ---
+---
 
-  ## Estructura de carpetas (resumen)
+Gracias por visitar este proyecto. ¡Diviértete creando y aprendiendo! 🎉
 
-  - Assets/
-    - PlayerController/
-      - Animations/
-      - Input/
-      - Model/
-      - Prefabs/
-      - Presets/
-      - Scripts/
-  - Docs/diagrams/  (imágenes PNG incluidas)
-  - ProjectSettings/
+--- 
 
-  ---
-
-  ## Scripts principales (resumen técnico)
-
-  - PlayerState: mantiene el estado de movimiento del jugador (Idling, Walking, Running, Sprinting, Jumping, Falling, Strafing).
-  - PlayerController: lógica de locomoción, salto, gravedad, rotación y control de cámara.
-  - PlayerAnimation: actualización de parámetros del `Animator` en base al estado y el input.
-  - CharacterControllerUtils: utilidades para detección de suelo y normales.
-  - Input: `PlayerLocomotionInput`, `PlayerActionsInput`, `ThirdPersonInput`, `PlayerInputManager` (wrappers del Input System).
-
-  ---
-
-  ## Diagramas (imágenes incluidas)
-
-  ### PlayerState
-
-  ![PlayerState diagram](Docs/diagrams/playerstate.png)
-
-  ### PlayerController
-
-  ![PlayerController diagram](Docs/diagrams/playercontroller.png)
-
-  ### PlayerAnimation
-
-  ![PlayerAnimation diagram](Docs/diagrams/playeranimation.png)
-
-  ### CharacterControllerUtils
-
-  ![CharacterControllerUtils diagram](Docs/diagrams/charactercontrollerutils.png)
-
-  ### Input / Manager
-
-  ![Input diagram](Docs/diagrams/input.png)
-
-  ### Diagrama global
-
-  ![Global class diagram](Docs/diagrams/GlobalClasses.png)
-
-  ### Mapa mental
-
-  ![Mindmap](Docs/diagrams/mindmap.png)
-
-  ---
-
-  ## Notas finales
-
-  Si quieres que convierta estas imágenes a SVG para mayor nitidez web, o que restaure las fuentes `.puml` en otra rama, dímelo y lo hago.
-
-  ---
-
-  ## Contacto
-
-  - Perfil: [LechuDev](https://github.com/LechuDev)
-
-  Gracias por revisar el proyecto.
-  ## Contacto
-
-
-
-  - Perfil: https://github.com/LechuDev
+¿Te gustaría que también lo traduzca al inglés para que sea bilingüe en GitHub?

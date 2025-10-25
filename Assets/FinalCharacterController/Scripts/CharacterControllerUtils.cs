@@ -1,47 +1,43 @@
+// Importa las librerías necesarias de C# y Unity.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-    // Utilidades relacionadas con CharacterController.
-    // Este archivo contiene funciones auxiliares que trabajan directamente con
-    // un CharacterController para facilitar operaciones frecuentes como muestrear
-    // la normal de la superficie bajo el personaje.
+
+    // RESUMEN DE LA CLASE: CharacterControllerUtils
+    // Esta es una clase estática, lo que significa que no necesita ser instanciada en un GameObject.
+    // Contiene métodos de utilidad (funciones auxiliares) que extienden la funcionalidad del componente
+    // 'CharacterController' de Unity. Su propósito es encapsular lógica compleja o repetitiva
+    // relacionada con el CharacterController en un solo lugar, para que pueda ser reutilizada
+    // fácilmente por otros scripts, como el PlayerController.
     public static class CharacterControllerUtils
-{
-        // Obtiene la normal de la superficie que está justo por debajo del CharacterController
-        // usando un SphereCast. Se usa el radio del CharacterController como radio del sphere
-        // y se lanza desde el centro (teniendo en cuenta el offset 'center') hacia abajo.
-        // 
-        // Parámetros:
-        //  - characterController: instancia del CharacterController que se desea muestrear.
-        //  - layerMask: (opcional) máscara de capas para filtrar qué colisiones considerar.
-        //
-        // Retorno:
-        //  - Devuelve la normal del hit detectado. Si no se detecta ninguna colisión dentro
-        //    de la distancia calculada, devuelve Vector3.up como normal por defecto.
-        //
-        // Notas de uso:
-        //  - Ideal para alinear el movimiento con la pendiente del terreno o para calcular
-        //    la inclinación del suelo en la lógica de movimiento.
-        //  - No modifica el estado del CharacterController; sólo realiza una consulta.
-        
+    {        
+        // MÉTODO: GetNormalWithSphereCast
+        // Propósito: Obtiene la normal de la superficie directamente debajo del personaje.
+        // Cómo funciona: Lanza un rayo grueso (SphereCast) hacia abajo desde el centro del CharacterController.
+        // Esto es más robusto que un Raycast simple, ya que es menos propenso a fallar en bordes o terrenos irregulares.
+        // Se usa actualmente en: PlayerController, en el método 'IsGrounded' y 'HandleSteepWalls' para detectar la inclinación del suelo.
         public static Vector3 GetNormalWithSphereCast(CharacterController characterController, LayerMask layerMask = default)
         {
+        // Inicializa la normal a 'Vector3.up' (apuntando hacia arriba). Este es el valor por defecto si no se encuentra suelo.
         Vector3 normal = Vector3.up;
-        // Calcular el centro del CharacterController teniendo en cuenta su offset 'center'.
+        // Calcula la posición del centro del CharacterController en el mundo, sumando el offset 'center' a la posición del transform.
         Vector3 center = characterController.transform.position + characterController.center;
-        // Calcular la distancia del sphere cast utilizando la altura y el stepOffset del CharacterController. 
+        // Calcula la distancia máxima del SphereCast. Es la mitad de la altura del personaje más su 'stepOffset',
+        // con un pequeño extra para asegurar que detecte el suelo incluso si está ligeramente separado.
         float distance = characterController.height / 2f + characterController.stepOffset + 0.01f;
-        // Realiza el SphereCast hacia abajo desde el centro del CharacterController.
-        //que es una especie de rayo con grosor.
-        // El SphereCast detecta colisiones con el suelo u otras superficies debajo del personaje.
+        
+        // Variable para almacenar la información de la colisión si el SphereCast tiene éxito.
         RaycastHit hit;
-            // Si el SphereCast golpea algo dentro de la distancia especificada y en las capas indicadas,
-            // actualiza la normal con la normal del hit detectado. sino devuelve Vector3.up.
+            // Lanza el SphereCast.
+            // Parámetros: origen, radio, dirección, variable de salida, distancia máxima, máscara de capas.
+            // Si el SphereCast golpea un colisionador que pertenece a la 'layerMask'...
             if (Physics.SphereCast(center, characterController.radius, Vector3.down, out hit, distance, layerMask))
             {
+                // ...actualiza la variable 'normal' con la normal de la superficie en el punto de impacto.
                 normal = hit.normal;
             }
 
+            // Devuelve la normal encontrada, o 'Vector3.up' si no se encontró nada.
             return normal;
         }
     }

@@ -331,7 +331,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""Gathering"",
                     ""type"": ""Button"",
                     ""id"": ""d9ba9315-bc1d-4791-ad3e-9601169f85de"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -341,6 +341,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""type"": ""Button"",
                     ""id"": ""42c2e099-ae12-4034-aaba-bb528b4d1e46"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa709dd5-bd27-46a4-b1ba-4963f9b297e3"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -368,6 +377,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Attacking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e82405b-c026-45a4-a062-2dabf34cbbf1"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -388,6 +408,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActionsMap = asset.FindActionMap("PlayerActionsMap", throwIfNotFound: true);
         m_PlayerActionsMap_Gathering = m_PlayerActionsMap.FindAction("Gathering", throwIfNotFound: true);
         m_PlayerActionsMap_Attacking = m_PlayerActionsMap.FindAction("Attacking", throwIfNotFound: true);
+        m_PlayerActionsMap_SwitchCamera = m_PlayerActionsMap.FindAction("SwitchCamera", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -708,6 +729,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IPlayerActionsMapActions> m_PlayerActionsMapActionsCallbackInterfaces = new List<IPlayerActionsMapActions>();
     private readonly InputAction m_PlayerActionsMap_Gathering;
     private readonly InputAction m_PlayerActionsMap_Attacking;
+    private readonly InputAction m_PlayerActionsMap_SwitchCamera;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerActionsMap".
     /// </summary>
@@ -727,6 +749,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerActionsMap/Attacking".
         /// </summary>
         public InputAction @Attacking => m_Wrapper.m_PlayerActionsMap_Attacking;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActionsMap/SwitchCamera".
+        /// </summary>
+        public InputAction @SwitchCamera => m_Wrapper.m_PlayerActionsMap_SwitchCamera;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -759,6 +785,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Attacking.started += instance.OnAttacking;
             @Attacking.performed += instance.OnAttacking;
             @Attacking.canceled += instance.OnAttacking;
+            @SwitchCamera.started += instance.OnSwitchCamera;
+            @SwitchCamera.performed += instance.OnSwitchCamera;
+            @SwitchCamera.canceled += instance.OnSwitchCamera;
         }
 
         /// <summary>
@@ -776,6 +805,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Attacking.started -= instance.OnAttacking;
             @Attacking.performed -= instance.OnAttacking;
             @Attacking.canceled -= instance.OnAttacking;
+            @SwitchCamera.started -= instance.OnSwitchCamera;
+            @SwitchCamera.performed -= instance.OnSwitchCamera;
+            @SwitchCamera.canceled -= instance.OnSwitchCamera;
         }
 
         /// <summary>
@@ -888,5 +920,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAttacking(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SwitchCamera" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSwitchCamera(InputAction.CallbackContext context);
     }
 }

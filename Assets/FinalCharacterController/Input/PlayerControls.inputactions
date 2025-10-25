@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PlayerControls",
     "maps": [
         {
@@ -244,7 +245,7 @@
                     "name": "Gathering",
                     "type": "Button",
                     "id": "d9ba9315-bc1d-4791-ad3e-9601169f85de",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -254,6 +255,15 @@
                     "type": "Button",
                     "id": "42c2e099-ae12-4034-aaba-bb528b4d1e46",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchCamera",
+                    "type": "Button",
+                    "id": "aa709dd5-bd27-46a4-b1ba-4963f9b297e3",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -279,6 +289,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Attacking",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e82405b-c026-45a4-a062-2dabf34cbbf1",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

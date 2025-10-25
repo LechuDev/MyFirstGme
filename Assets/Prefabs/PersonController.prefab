@@ -4972,15 +4972,16 @@ MonoBehaviour:
   runSpeed: 4
   sprintAcceleration: 50
   sprintSpeed: 7
-  inAirAcceleration: 25
   drag: 20
-  inAirDrag: 5
   gravity: 25
-  terminalVelocity: 50
   jumpSpeed: 0.8
+  inAirAcceleration: 25
+  inAirDrag: 5
+  terminalVelocity: 50
   movingThreshold: 0.01
   playerModelRotationSpeed: 10
   rotateToTargetTime: 0.68
+  rotationTolerance: 90
   lookSenseH: 0.1
   lookSenseV: 0.1
   lookLimitV: 70
